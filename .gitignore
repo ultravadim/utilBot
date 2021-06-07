@@ -116,3 +116,4 @@ dmypy.json
 #Config
 config.py
 .idea/
+test.py
