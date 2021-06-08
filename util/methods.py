@@ -4,5 +4,14 @@ import requests
 class Method(object):
     r = requests.Session()
 
+    def __init__(self, base_url):
+        self.base_url = base_url
+
     def mail(self, guid=None, stand=None):
-        return self.r.get(f'http://util.ao5.in/support/api/{stand}/getProductEmail/{guid}').json()
+        return self.r.get(f'{self.base_url}/support/api/{stand}/getProductEmail/{guid}').json()
+
+    def publish_info(self, guid=None, stand=None):
+        return self.r.post(f'{self.base_url}/support/api/{stand}/publishProductInfo/{guid}').json()
+
+    def reset_request_status(self, request_guid=None, stand=None):
+        return self.r.post(f'{self.base_url}/support/api/{stand}/resetRequestStatus/{request_guid}').json()
