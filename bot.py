@@ -7,7 +7,7 @@ from util.methods import Method
 
 logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=config.BOT_TOKEN)
+bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
 regular_guid = '[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}|[a-zA-Z0-9]{32}'
 util = Method('http://util.ao5.in')
@@ -15,7 +15,14 @@ util = Method('http://util.ao5.in')
 
 @dp.message_handler(commands=['start', 'help'])
 async def welcome_message(message: types.Message):
-    await message.answer('Welcome Message')
+    await message.answer(
+        '<b>Доступные методы:</b>\n'
+        '/req [RequestGUID] - обновляет статус заявки\n'
+        '/cor [ProductGUID] - обновляет продукт через ядре \n'
+        '/res [RequestGUID] - чинит кнопку. Изменяет состояние из 6 в 1.\n'
+        '/pub [ProductGUID] - обновляет информацию о серте и лицензии\n'
+        '/mail [ProductGUID] - узнать почту пользователя'
+    )
 
 
 @dp.message_handler(commands=['mail'])
@@ -57,7 +64,7 @@ async def publish_product_info(message: types.Message):
         await message.answer(response_message['message']['errorMessage'])
 
 
-@dp.message_handler(commands=['reset'])
+@dp.message_handler(commands=['res'])
 async def reset_request_status(message: types.Message):
     if len(message.text.split(' ')) != 2:
         await message.answer('Сбросить заявку со статуса CertRequestCreation (6) в черновик (1).\n'
