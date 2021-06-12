@@ -114,6 +114,5 @@ dmypy.json
 .pyre/
 
 #Config
-config.py
 .idea/
 test.py

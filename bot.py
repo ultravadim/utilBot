@@ -1,16 +1,26 @@
 import re
-import logging
-
 from aiogram import Bot, Dispatcher, executor, types
-import config
+from config import BOT_TOKEN, UTIL_URL, bot_logger
 from util.methods import Method
 
-logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=config.BOT_TOKEN, parse_mode=types.ParseMode.HTML)
-dp = Dispatcher(bot)
+### Константы.
 regular_guid = '[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}|[a-zA-Z0-9]{32}'
-util = Method('http://util.ao5.in')
+
+### Настройка бота.
+bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
+dp = Dispatcher(bot)
+
+# Утилита
+util = Method(UTIL_URL)
+
+
+def validate_guid(guid: str) -> bool:
+    """Проверить валидность Guid."""
+    if re.match(regular_guid, guid):
+        return True
+    bot_logger.error(f"GUID: {guid} имеет неверный формат!")
+    return False
 
 
 @dp.message_handler(commands=['start', 'help'])
@@ -34,7 +44,7 @@ async def get_mail(message: types.Message):
 
     # Забираем GUID из сообщения и проверяем по регулярке
     guid = message.text.split(maxsplit=1)[1]
-    if re.match(regular_guid, guid) is None:
+    if not validate_guid(guid):
         await message.answer('GUID продукта указан некорректно.')
         return
 
@@ -53,7 +63,7 @@ async def publish_product_info(message: types.Message):
         return
 
     guid = message.text.split(maxsplit=1)[1]
-    if re.match(regular_guid, guid) is None:
+    if not validate_guid:
         await message.answer('GUID продукта указан некорректно.')
         return
 
@@ -72,7 +82,7 @@ async def reset_request_status(message: types.Message):
         return
 
     guid = message.text.split(maxsplit=1)[1]
-    if re.match(regular_guid, guid) is None:
+    if not validate_guid(guid):
         await message.answer('GUID заявки указан некорректно.')
         return
 
@@ -87,7 +97,7 @@ async def update_request(message: types.Message):
         return
 
     guid = message.text.split(maxsplit=1)[1]
-    if re.match(regular_guid, guid) is None:
+    if not validate_guid(guid):
         await message.answer('GUID заявки указан некорректно.')
         return
 
@@ -105,7 +115,7 @@ async def updateAbonents(message: types.Message):
         return
 
     guid = message.text.split(maxsplit=1)[1]
-    if re.match(regular_guid, guid) is None:
+    if not validate_guid(guid):
         await message.answer('GUID продукта указан некорректно.')
         return
 
@@ -125,4 +135,10 @@ async def updateAbonents(message: types.Message):
 
 
 if __name__ == '__main__':
-    executor.start_polling(dp)
+    if BOT_TOKEN is None:
+        bot_logger.critical("Токен для бота не определен!")
+    if UTIL_URL is None:
+        bot_logger.critical("URL Утилиты не определен!")
+    else:
+        executor.start_polling(dp)
+    bot_logger.info("Бот завершил свою работу")
