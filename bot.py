@@ -39,8 +39,7 @@ async def welcome_message(message: types.Message):
         '/cor [ProductGUID] - обновляет продукт через ядре \n'
         '/res [RequestGUID] - чинит кнопку. Изменяет состояние из 6 в 1.\n'
         '/pub [ProductGUID] - обновляет информацию о серте и лицензии\n'
-        '/mail [ProductGUID] - узнать почту пользователя'
-    )
+        '/mail [ProductGUID] - узнать почту пользователя')
 
 
 @dp.message_handler(commands=['mail'])
