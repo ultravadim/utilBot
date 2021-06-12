@@ -1,5 +1,6 @@
 from uuid import UUID
 from aiogram import Bot, Dispatcher, executor, types
+from aiogram.types.reply_keyboard import KeyboardButton
 from config import BOT_TOKEN, UTIL_URL, STAND, bot_logger
 from extension.utility import UtilityClient
 
@@ -33,13 +34,14 @@ def validate_guid(guid: str) -> bool:
 
 @dp.message_handler(commands=['start', 'help'])
 async def welcome_message(message: types.Message):
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True).add(KeyboardButton('/help'))
     await message.answer(
         '<b>Доступные методы:</b>\n'
         '/req [RequestGUID] - обновляет статус заявки\n'
         '/cor [ProductGUID] - обновляет продукт через ядре \n'
         '/res [RequestGUID] - чинит кнопку. Изменяет состояние из 6 в 1.\n'
         '/pub [ProductGUID] - обновляет информацию о серте и лицензии\n'
-        '/mail [ProductGUID] - узнать почту пользователя')
+        '/mail [ProductGUID] - узнать почту пользователя', reply_markup=keyboard)
 
 
 @dp.message_handler(commands=['mail'])
