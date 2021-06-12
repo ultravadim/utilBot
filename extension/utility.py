@@ -1,4 +1,5 @@
 import aiohttp
+from typing import Tuple
 from config import util_logger, logging
 from urllib.parse import urljoin
 
@@ -17,7 +18,8 @@ def log_request(func):
     return wrapper
 
 
-class Method(object):
+class UtilityClient:
+    """Класс, инкапсулирующий в себя методы работы с утилитой."""
 
     GET_EMAIL_ROUTE = '/support/api/{stand}/getProductEmail/{product_guid}'
     PUBLISH_INFO_ROUTE = '/support/api/{stand}/publishProductInfo/{product_guid}'
@@ -30,7 +32,7 @@ class Method(object):
         self.stand = stand
 
     @log_request
-    async def get_email(self, product_guid: str) -> str:
+    async def get_email(self, product_guid: str) -> Tuple[str, int]:
         """запрос на получение email учетной записи по product guid."""
         url = urljoin(
             self.base_url, 
@@ -48,7 +50,7 @@ class Method(object):
                         return response_dict['message'], logging.WARNING
 
     @log_request
-    async def publish_info(self, product_guid: str) -> str:
+    async def publish_info(self, product_guid: str) -> Tuple[str, int]:
         """запрос на публикацию информации об абоненте."""
         url = urljoin(
             self.base_url, 
@@ -66,7 +68,7 @@ class Method(object):
                         return response_dict['message']['errorMessage'], logging.WARNING
 
     @log_request
-    async def reset_request_status(self, request_guid: str) -> str:
+    async def reset_request_status(self, request_guid: str) -> Tuple[str, int]:
         """запрос на сброс заявки в черновик."""
         url = urljoin(
             self.base_url, 
@@ -80,7 +82,7 @@ class Method(object):
                     return (await response.json())['message'], logging.INFO
 
     @log_request
-    async def update_request_status(self, request_guid: str) -> str:
+    async def update_request_status(self, request_guid: str) -> Tuple[str, int]:
         """запрос на обновение статуса заявки."""
         url = urljoin(
             self.base_url, 
@@ -98,7 +100,7 @@ class Method(object):
                         return response_dict['message']['errorMessage'], logging.WARNING
 
     @log_request
-    async def update_abonents(self, product_guid: str) -> str:
+    async def update_abonents(self, product_guid: str) -> Tuple[str, int]:
         """запрос на обновление абонента."""
         url = urljoin(self.base_url, self.UPDATE_ABONENTS_ROUTE.format(stand=self.stand))
         data = {'products': [f"{product_guid}"]}

@@ -1,7 +1,7 @@
 from uuid import UUID
 from aiogram import Bot, Dispatcher, executor, types
 from config import BOT_TOKEN, UTIL_URL, STAND, bot_logger
-from util.methods import Method
+from extension.utility import UtilityClient
 
 
 ### Настройка бота.
@@ -9,7 +9,7 @@ bot = Bot(token=BOT_TOKEN, parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
 
 # Утилита
-util = Method(UTIL_URL, STAND)
+util = UtilityClient(UTIL_URL, STAND)
 
 
 def log_command(func):
