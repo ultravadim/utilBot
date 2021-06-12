@@ -16,7 +16,8 @@ def log_command(func):
     """Декоратор для логирования команды."""
     async def wrapper(*args):
         message, = args
-        bot_logger.info(f"Получена команда '{message.text}' от пользователя '{message.from_user.full_name}'")
+        bot_logger.info(f"Получена команда '{message.text}' от пользователя "
+                        f"'{message.from_user.full_name} | @{message.from_user.username}'")
         await func(*args)
     return wrapper
 
