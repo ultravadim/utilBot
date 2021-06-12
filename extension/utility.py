@@ -1,6 +1,7 @@
 import aiohttp
 from typing import Tuple
 from config import util_logger, logging
+from aiocache import cached
 from urllib.parse import urljoin
 
 
@@ -32,6 +33,7 @@ class UtilityClient:
         self.stand = stand
 
     @log_request
+    @cached(ttl=5)
     async def get_email(self, product_guid: str) -> Tuple[str, int]:
         """запрос на получение email учетной записи по product guid."""
         url = urljoin(
@@ -50,6 +52,7 @@ class UtilityClient:
                         return response_dict['message'], logging.WARNING
 
     @log_request
+    @cached(ttl=5)
     async def publish_info(self, product_guid: str) -> Tuple[str, int]:
         """запрос на публикацию информации об абоненте."""
         url = urljoin(
@@ -68,6 +71,7 @@ class UtilityClient:
                         return response_dict['message']['errorMessage'], logging.WARNING
 
     @log_request
+    @cached(ttl=5)
     async def reset_request_status(self, request_guid: str) -> Tuple[str, int]:
         """запрос на сброс заявки в черновик."""
         url = urljoin(
@@ -82,6 +86,7 @@ class UtilityClient:
                     return (await response.json())['message'], logging.INFO
 
     @log_request
+    @cached(ttl=5)
     async def update_request_status(self, request_guid: str) -> Tuple[str, int]:
         """запрос на обновение статуса заявки."""
         url = urljoin(
@@ -100,6 +105,7 @@ class UtilityClient:
                         return response_dict['message']['errorMessage'], logging.WARNING
 
     @log_request
+    @cached(ttl=5)
     async def update_abonents(self, product_guid: str) -> Tuple[str, int]:
         """запрос на обновление абонента."""
         url = urljoin(self.base_url, self.UPDATE_ABONENTS_ROUTE.format(stand=self.stand))
