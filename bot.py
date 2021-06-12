@@ -22,7 +22,8 @@ def authentication(func):
 
     async def wrapper(*args):
         message, = args
-        bot_logger.info(f"Получена команда '{message.text}' от пользователя '{message.from_user.full_name}'")
+        bot_logger.info(f"Получена команда '{message.text}' от пользователя "
+                        f"'{message.from_user.full_name} | {message.from_user.mention}'")
 
         if not User.select().where(User.telegram_id == message.from_user.id, User.is_active).exists():
             bot_logger.warning(f"Пользователь id={message.from_user.id} '{message.from_user.full_name}' не зарегистрирован")
