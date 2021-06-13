@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    command: python bot.py
+    environment:
+      - BOT_TOKEN=817070696:AAEkEdMXruJ7Vni3Wx2ShD772GhH4_DgX0w
+      - UTIL_URL=http://util.ao5.in/
+      - STAND=work
+      - DATABASE=postgresql://postgres:postgres@10.0.19.31:31642/utility
+      - ADMINS=479844252
