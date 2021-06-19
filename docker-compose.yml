@@ -3,7 +3,7 @@ version: "3.9"
 services:
   bot:
     build: .
-    command: python bot.py
+    command: python main.py
     environment:
       - BOT_TOKEN=817070696:AAEkEdMXruJ7Vni3Wx2ShD772GhH4_DgX0w
       - UTIL_URL=http://util.ao5.in/
