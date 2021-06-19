@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+data:
+  token: "<token>"
+  url: <url>
+  stand: work
+  database: <database_connection_string>
+  admins: "<telegram_ids>"
