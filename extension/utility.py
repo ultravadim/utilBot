@@ -1,3 +1,6 @@
+"""
+Http методы доступа к Утилите.
+"""
 import aiohttp
 from typing import Tuple
 from config import util_logger, logging
