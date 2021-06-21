@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: util-bot
-  namespace: default
+  namespace: dev-utils
   labels:
     name: util-bot
 spec:
