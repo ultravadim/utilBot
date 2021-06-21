@@ -3,16 +3,10 @@ global:
   imageTag: 'latest'
 
 bot:
-  envs:
-    BOT_TOKEN: "1820850136:AAH1WrMh6xvLo2bCKIAUV4az16YrTf0wp_w"
-    UTIL_URL: http://util.ao5.in/
-    STAND: prod
-    DATABASE: postgresql://postgres:postgres@10.0.19.31:31642/utility
-    ADMINS: "479844252"
   resources:
     memory:
       requests: '100Mi'
-      limits: '512Mi'
+      limits: '200Mi'
     cpu:
       requests: '10m'
-      limits: '1'
+      limits: '500m'
