@@ -16,11 +16,14 @@ build:
 
 .deploy_template:
   stage: deploy
+  before_script:
+    - echo ${KUBE_CONFIG} | base64 --decode > .helm/config
   script:
     # Deploy via Helm
     - cd .helm
-    - helm upgrade --install ${RELEASE_NAME} --kubeconfig="$KUBE_CONFIG" --namespace ${KUBE_NAMESPACE} --values values-${CI_ENVIRONMENT_NAME}.yaml --set global.imageTag=${CI_PIPELINE_ID} ./
-
+    - helm upgrade --install ${RELEASE_NAME} --kubeconfig=config --namespace ${KUBE_NAMESPACE} --values values-${CI_ENVIRONMENT_NAME}.yaml --set global.imageTag=${CI_PIPELINE_ID} ./
+  after_script:
+    - rm .helm/config
 dev deploy:
   extends: .deploy_template
   variables:
