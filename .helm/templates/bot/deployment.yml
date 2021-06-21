@@ -32,4 +32,3 @@ spec:
           limits:
             memory: {{ .Values.bot.resources.memory.limits }}
             cpu: {{ .Values.bot.resources.cpu.limits }}
-    restartPolicy: Always
