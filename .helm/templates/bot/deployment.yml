@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: util-bot
+  labels:
+    name: util-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: util-bot
+  template:
+    metadata:
+      labels:
+        name: util-bot
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.global.secretName }}
+      containers:
+      - name: util-bot
+        image: harbor.infra.yandex.astral-dev.ru/webreport/dev/utils-bot:{{ .Values.global.imageTag }}
+        imagePullPolicy: Always
+        env:
+        {{- range $key, $val := .Values.bot.envs }}
+        - name: {{ $key }}
+          value: {{ $val | quote }}
+        {{- end }}
+        resources:
+          requests:
+            memory: {{ .Values.bot.resources.memory.requests }}
+            cpu: {{ .Values.bot.resources.cpu.requests }}
+          limits:
+            memory: {{ .Values.bot.resources.memory.limits }}
+            cpu: {{ .Values.bot.resources.cpu.limits }}
+    restartPolicy: Always
