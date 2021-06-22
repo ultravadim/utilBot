@@ -4,7 +4,7 @@ bot:
     UTIL_URL: http://util.ao5.in/
     STAND: prod
     DATABASE: postgresql://postgres:postgres@10.0.19.31:31642/utility
-    ADMINS: "479844252"
+    ADMINS: "479844252;512202713"
   resources:
     memory:
       requests: '100Mi'
