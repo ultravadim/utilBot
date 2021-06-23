@@ -1,0 +1,36 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  variables:
+    REGISTRY: harbor.infra.yandex.astral-dev.ru/webreport/dev/utils-bot
+    IMAGE_NAME: ${REGISTRY}:${CI_PIPELINE_ID}  
+  script:
+    - docker login --username $DOCKER_LOGIN --password $DOCKER_PASSWORD harbor.infra.yandex.astral-dev.ru
+    - docker build -t ${IMAGE_NAME} ./
+    - docker push ${IMAGE_NAME}
+  after_script:
+    - docker logout harbor.infra.yandex.astral-dev.ru
+
+.deploy_template:
+  stage: deploy
+  before_script:
+    - echo ${KUBE_CONFIG} | base64 --decode > .helm/config
+  script:
+    # Deploy via Helm
+    - cd .helm
+    - helm upgrade --install ${RELEASE_NAME} --kubeconfig=config --namespace ${KUBE_NAMESPACE} --values values-${CI_ENVIRONMENT_NAME}.yaml --set global.imageTag=${CI_PIPELINE_ID} ./
+  after_script:
+    - rm .helm/config
+dev deploy:
+  extends: .deploy_template
+  variables:
+    KUBE_NAMESPACE: "dev-utils"
+    RELEASE_NAME: "utils-bot"
+    KUBE_CONFIG: $KUBE_CONFIG_DEV
+  environment:
+    name: dev
+  only:
+    - main

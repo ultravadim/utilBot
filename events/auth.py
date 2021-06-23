@@ -1,7 +1,7 @@
 """
 События по регистрации нового пользователя в боте
 """
-from bot import dp
+from bot import dp, bot
 from models.user import User
 from datetime import datetime
 from aiocache import cached
@@ -9,7 +9,6 @@ from aiogram import types
 from aiogram.types.reply_keyboard import KeyboardButton, ReplyKeyboardMarkup
 from aiogram.types.inline_keyboard import InlineKeyboardButton, InlineKeyboardMarkup
 from config import bot_logger, ADMINS
-
 
 
 @dp.message_handler(commands=['register'])

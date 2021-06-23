@@ -1,0 +1,12 @@
+global:
+  secretName: regsecret
+  imageTag: 'latest'
+
+bot:
+  resources:
+    memory:
+      requests: '100Mi'
+      limits: '200Mi'
+    cpu:
+      requests: '10m'
+      limits: '500m'
