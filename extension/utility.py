@@ -30,6 +30,7 @@ class UtilityClient:
     RESET_REQUEST_ROUTE = '/support/api/{stand}/resetRequestStatus/{request_guid}'
     UPDATE_REQUEST_ROUTE = '/support/api/{stand}/updateRequest/{request_guid}'
     UPDATE_ABONENTS_ROUTE = '/support/api/{stand}/updateAbonents'
+    ADD_TO_WHITE_LIST = '/support/api/{stand}/addProductToWhiteList/{product_guid}'
 
     def __init__(self, base_url: str, stand: str = 'prod'):
         self.base_url = base_url
@@ -130,3 +131,22 @@ class UtilityClient:
                         return message if message else 'Обновления не произошли.', logging.INFO
                     else:
                         return response_dict['message']['errors'], logging.WARNING
+
+    @log_request
+    @cached(ttl=5)
+    async def add_to_white_list(self, product_guid: str) -> Tuple[str, int]:
+        """добавить бонента в white list для миграции."""
+        url = urljoin(
+            self.base_url,
+            self.ADD_TO_WHITE_LIST.format(product_guid=product_guid, stand=self.stand))
+
+        async with aiohttp.ClientSession() as session:
+            async with session.put(url) as response:
+                if response.status != 200:
+                    return await response.text(), logging.ERROR
+                else:
+                    response_dict = await response.json()
+                    if response_dict['success']:
+                        return response_dict['message'], logging.INFO
+                    else:
+                        return response_dict['message'], logging.WARNING

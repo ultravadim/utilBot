@@ -49,7 +49,8 @@ async def welcome_message(message: types.Message):
             '/cor [ProductGUID] - обновляет продукт через ядро \n'
             '/res [RequestGUID] - чинит кнопку. Изменяет состояние из 6 в 1.\n'
             '/pub [ProductGUID] - обновляет информацию о серте и лицензии\n'
-            '/mail [ProductGUID] - узнать почту пользователя', reply_markup=keyboard)
+            '/mail [ProductGUID] - узнать почту пользователя\n'
+            '/add [ProductGUID] - добавить организацию в white list', reply_markup=keyboard)
     else:
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
         keyboard.add(KeyboardButton('/help'))
@@ -144,6 +145,23 @@ async def update_abonents(message: types.Message):
         return
 
     response_message = await util.update_abonents(guid)
+    await message.answer(response_message)
+
+
+@dp.message_handler(commands=['add'])
+@authentication
+async def add_product_to_white_list(message: types.Message):
+    """Добавить организацию в white list для миграции."""
+    guid = message.get_args().strip()
+    if not guid:
+        await message.answer('Добавление организации в white list для миграции в АО5')
+        return
+
+    if not validate_guid(guid):
+        await message.answer('GUID продукта указан некорректно.')
+        return
+
+    response_message = await util.add_to_white_list(guid)
     await message.answer(response_message)
 
 
